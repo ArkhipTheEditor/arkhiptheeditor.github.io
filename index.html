@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arkhip The Editor — Story-Driven Video Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#08080c;--bg2:#0e0e14;--bg-card:#12101a;--bg-card-h:#19172a;
+    --text:#e6e2da;--dim:#918da0;--accent:#7C3AED;--accent-l:#A78BFA;
+    --glow:rgba(124,58,237,.15);--glow-s:rgba(124,58,237,.25);
+    --ab:rgba(124,58,237,.25);--abg:rgba(124,58,237,.08);
+    --border:#1f1d2e;--r:16px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;background:var(--bg);overflow-x:hidden}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-weight:300;max-width:100vw}
+  ::selection{background:var(--accent);color:#fff}
+  .c{max-width:1200px;margin:0 auto;padding:0 32px}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 0;background:rgba(8,8,12,.8);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid transparent;transition:border-color .3s}
+  nav.scrolled{border-bottom-color:var(--border)}
+  .nav-i{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;padding:0 32px}
+  .nav-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;letter-spacing:-.01em;color:var(--text);text-decoration:none}
+  .nav-logo span{color:var(--accent)}
+  .nav-links{display:flex;align-items:center;gap:32px;list-style:none}
+  .nav-links a{color:var(--dim);text-decoration:none;font-size:14px;transition:all .3s;letter-spacing:.02em}
+  .nav-links a:hover{color:var(--accent-l)}
+  
+  .nav-btn{display:inline-flex;align-items:center;padding:8px 20px;border-radius:100px;background:var(--abg);border:1px solid var(--ab);color:var(--accent-l) !important;font-weight:400}
+  .nav-btn:hover{background:rgba(124,58,237,0.15);border-color:var(--accent);color:#fff !important;}
+
+  .hero{min-height:100vh;display:flex;align-items:center;padding:140px 0 100px;position:relative;overflow:hidden}
+  .hero-glow{position:absolute;border-radius:50%;pointer-events:none}
+  .hg1{width:700px;height:700px;background:radial-gradient(circle,rgba(124,58,237,.1),transparent 60%);top:-120px;right:-180px}
+  .hg2{width:500px;height:500px;background:radial-gradient(circle,rgba(167,139,250,.06),transparent 60%);bottom:-80px;left:-120px}
+  .hg3{width:350px;height:350px;background:radial-gradient(circle,rgba(124,58,237,.07),transparent 60%);top:35%;left:25%}
+  .hero-grid{display:grid;grid-template-columns:1fr 380px;gap:72px;align-items:center;width:100%;position:relative}
+  .hero-tag{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;background:var(--abg);border:1px solid var(--ab);border-radius:100px;font-size:13px;color:var(--accent-l);font-weight:400;margin-bottom:36px;animation:fu .8s ease both;letter-spacing:.04em}
+  .hero-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--accent-l);animation:pulse 2.5s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+  .hero h1{font-family:'Playfair Display',serif;font-size:clamp(42px,6vw,72px);font-weight:700;line-height:1.04;letter-spacing:-.02em;margin-bottom:28px;animation:fu .8s ease .1s both}
+  .hero h1 .highlight{color:var(--accent-l);display:inline-block}
+  .hero-desc{font-size:18px;color:var(--dim);max-width:520px;line-height:1.75;margin-bottom:40px;font-weight:300;animation:fu .8s ease .2s both}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;animation:fu .8s ease .3s both}
+  
+  .hero-photo{animation:fu .8s ease .25s both;position:relative}
+  .hero-photo::after{content:'';position:absolute;inset:-1px;border-radius:20px;background:linear-gradient(135deg,var(--ab),transparent 50%);z-index:0;pointer-events:none}
+  .hero-photo img{width:100%;border-radius:20px;object-fit:cover;aspect-ratio:1/1;position:relative;z-index:1;display:block;transition:all .5s cubic-bezier(.22,1,.36,1)}
+  .hero-photo:hover img{box-shadow:0 8px 48px var(--glow)}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;border-radius:100px;font-size:14px;font-weight:400;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1);cursor:pointer;border:none;font-family:'Inter',sans-serif;letter-spacing:.02em}
+  .btn-p{background:var(--accent);color:#fff}
+  .btn-p:hover{box-shadow:0 0 40px var(--glow-s);transform:translateY(-2px)}
+  .btn-s{background:transparent;color:var(--dim);border:1px solid var(--border)}
+  .btn-s:hover{border-color:var(--ab);color:var(--accent-l)}
+
+  .glow-line{height:1px;border:none;margin:0;background:linear-gradient(90deg,transparent,var(--ab),transparent)}
+
+  .section{padding:100px 0;position:relative;overflow:hidden}
+  .section .bg-glow{position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(124,58,237,.04),transparent 60%);pointer-events:none;border-radius:50%}
+  .s-label{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.18em;color:var(--accent);margin-bottom:12px}
+  .s-title{font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,48px);font-weight:700;letter-spacing:-.01em;line-height:1.1;margin-bottom:54px}
+
+  .video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
+  .vid-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:all .4s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column}
+  .vid-card:hover{border-color:var(--ab);transform:translateY(-4px);box-shadow:0 16px 44px rgba(0,0,0,.4)}
+  
+  .vid-player{width:100%;aspect-ratio:9/16;background:#000;position:relative;cursor:pointer;overflow:hidden;}
+  .vid-player video{width:100%;height:100%;object-fit:cover;display:block;}
+  .vid-play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;z-index:2;}
+  
+  .vid-play-btn svg{width:28px;height:28px;fill:#fff;margin-left:4px;}
+  
+  .vid-player:hover .vid-play-btn{background:rgba(124,58,237,0.75);transform:translate(-50%,-50%) scale(1.05);border-color:transparent;}
+  .vid-player.is-playing .vid-play-btn{opacity:0;pointer-events:none;}
+  
+  .vid-info{padding:28px 24px}
+  .vid-tag{display:inline-block;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent-l);background:var(--abg);border:1px solid var(--ab);padding:4px 10px;border-radius:100px;margin-bottom:12px}
+  .vid-info h3{font-family:'Playfair Display',serif;font-size:24px;font-weight:600;margin-bottom:16px;color:var(--text)}
+  .vid-info p{font-size:14px;color:var(--dim);line-height:1.65;margin-bottom:12px;font-weight:300}
+  .vid-info strong{color:var(--accent-l);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px}
+
+  /* Стили для блока "How it works" */
+  .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 40px; }
+  .process-step { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 36px 28px; position: relative; overflow: hidden; transition: all 0.4s ease; }
+  .process-step:hover { border-color: var(--ab); transform: translateY(-3px); }
+  .process-step .step-num { font-family: 'Playfair Display', serif; font-size: 84px; font-weight: 700; color: var(--abg); position: absolute; top: -10px; right: 10px; line-height: 1; z-index: 0; transition: color 0.4s ease; }
+  .process-step:hover .step-num { color: rgba(124,58,237, 0.15); }
+  .process-step h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; margin-bottom: 12px; color: var(--text); position: relative; z-index: 1; }
+  .process-step p { font-size: 14px; color: var(--dim); line-height: 1.65; font-weight: 300; position: relative; z-index: 1; }
+
+  /* Стили для блока About */
+  .about-header {display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:54px;}
+  .about-header .s-title {margin-bottom:0;}
+  .about-socials {display:flex;gap:12px;}
+  .about-socials a {display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);color:var(--dim);transition:all 0.3s ease;}
+  .about-socials a svg {width:20px;height:20px;}
+  .about-socials a:hover {border-color:var(--ab);color:var(--accent-l);background:var(--bg-card-h);transform:translateY(-3px);}
+
+  .about-grid{display:grid;grid-template-columns:300px 1fr;gap:56px;align-items:start}
+  .about-photo{position:relative}
+  .about-photo::after{content:'';position:absolute;inset:-1px;border-radius:var(--r);background:linear-gradient(180deg,var(--ab),transparent 50%);z-index:0;pointer-events:none}
+  .about-photo img{width:100%;border-radius:var(--r);object-fit:cover;aspect-ratio:3/4;position:relative;z-index:1;display:block;transition:all .5s cubic-bezier(.22,1,.36,1)}
+  .about-photo:hover img{box-shadow:0 8px 32px var(--glow)}
+  .about-text p{color:var(--dim);font-size:16px;line-height:1.8;margin-bottom:20px;font-weight:300}
+  .about-text strong{color:var(--text);font-weight:500}
+  .tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+  .tools span{padding:6px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:100px;font-size:12px;color:var(--dim);transition:all .3s;letter-spacing:.02em}
+  .tools span:hover{border-color:var(--ab);color:var(--accent-l);background:var(--bg-card-h)}
+
+  .cta-section{padding:120px 0;text-align:center}
+  .cta-box{background:var(--bg-card);border:1px solid var(--border);border-radius:24px;padding:72px 48px;position:relative;overflow:hidden}
+  .cta-glow{position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,var(--glow),transparent 55%);pointer-events:none}
+  .cta-box h2{font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,48px);font-weight:700;letter-spacing:-.01em;margin-bottom:16px;position:relative}
+  .cta-box p{color:var(--dim);font-size:16px;margin-bottom:36px;position:relative;font-weight:300;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.7}
+  
+  .cta-primary{display:flex;justify-content:center;position:relative;z-index:1;}
+  .cta-primary .btn-p{padding:16px 48px;font-size:16px;}
+
+  footer{padding:32px 0;border-top:1px solid var(--border);text-align:center}
+  footer p{font-size:13px;color:var(--dim);letter-spacing:.02em}
+
+  @keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  .reveal{opacity:0;transform:translateY(24px);transition:all .8s cubic-bezier(.22,1,.36,1)}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  @media(max-width:868px){
+    .c{padding:0 24px}
+    .hero-grid{grid-template-columns:1fr;gap:40px}
+    .hero-photo{order:-1;max-width:280px}
+    .hero{padding:120px 0 80px;min-height:auto}
+    .about-header {flex-direction:column;align-items:flex-start;gap:16px;}
+    .about-grid{grid-template-columns:1fr;gap:40px}
+    .about-photo{max-width:260px}
+    .nav-links{display:none}
+    .cta-box{padding:48px 24px}
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-i">
+    <a href="#" class="nav-logo">ArkhipTheEditor<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="#video">Portfolio</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#about">About me</a></li>
+      <li><a href="#contact" class="nav-btn">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-glow hg1"></div><div class="hero-glow hg2"></div><div class="hero-glow hg3"></div>
+  <div class="c">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-tag"><span class="dot"></span> Available for work</div>
+        <h1>Story-Driven<br><span class="highlight">Video Editing</span></h1>
+        <p class="hero-desc">I help experts, psychologists, and creators edit short-form videos that make people stop, feel, and listen. Editing isn't just cutting dead air — it's about rhythm, tension, and emotion.</p>
+        <div class="hero-cta">
+          <a href="#contact" class="btn btn-p">Let's work together</a>
+          <a href="#video" class="btn btn-s">See my work</a>
+        </div>
+      </div>
+      <div class="hero-photo"><img src="images/Moth.jpg" alt="Arkhip The Editor Aesthetic" fetchpriority="high"></div>
+    </div>
+  </div>
+</section>
+
+<hr class="glow-line">
+
+<section class="section" id="video">
+  <div class="c">
+    <div class="bg-glow" style="top:0;right:-250px"></div>
+    <div class="s-label reveal">Selected Works</div>
+    <h2 class="s-title reveal">Result, not just editing</h2>
+    
+    <div class="video-grid">
+      <!-- Video 1: Andrew Huberman -->
+      <div class="vid-card reveal">
+        <div class="vid-player" onclick="togglePlay(this)">
+          <video src="videos/Huberman.mp4" poster="covers/Huberman.jpg" preload="none" playsinline></video>
+          <div class="vid-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        </div>
+        <div class="vid-info">
+          <span class="vid-tag">Clarity & Focus</span>
+          <h3>Huberman Lab</h3>
+          <p><strong>The Challenge</strong> Condense a 4-minute slow monologue into a highly engaging 20-second short without losing the core scientific message.</p>
+          <p><strong>The Execution</strong> Built a new narrative structure (Hook &rarr; Body &rarr; Payoff). Used fast-paced cuts, custom dynamic typography, and SFX for pattern interrupts to maintain high energy.</p>
+          <p><strong>The Result</strong> A dense, high-retention piece built for algorithms, keeping the viewer hooked until the very last second.</p>
+        </div>
+      </div>
+
+      <!-- Video 2: Esther Perel -->
+      <div class="vid-card reveal">
+        <div class="vid-player" onclick="togglePlay(this)">
+          <video src="videos/Ester.mp4" poster="covers/Ester.jpg" preload="none" playsinline></video>
+          <div class="vid-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        </div>
+        <div class="vid-info">
+          <span class="vid-tag">Depth & Emotion</span>
+          <h3>Esther Perel</h3>
+          <p><strong>The Challenge</strong> Preserve the emotional weight and dramatic pauses of the original speech without making it boring for a fast-paced feed.</p>
+          <p><strong>The Execution</strong> Kept the original pacing. Applied warm cinematic color grading, gentle piano, and custom fade-in typography for emphasis. Zero jarring sound effects to maintain the intimate atmosphere.</p>
+          <p><strong>The Result</strong> A thought-provoking, atmospheric video that stands out and stops the scroll through pure emotion, not cheap dopamine.</p>
+        </div>
+      </div>
+
+      <!-- Video 3: Chris Williamson x Alex Hormozi -->
+      <div class="vid-card reveal">
+        <div class="vid-player" onclick="togglePlay(this)">
+          <video src="videos/Hormozi.mp4" poster="covers/Hormozi.jpg" preload="none" playsinline></video>
+          <div class="vid-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+        </div>
+        <div class="vid-info">
+          <span class="vid-tag">Ambition & Mindset</span>
+          <h3>Chris Williamson x Alex Hormozi</h3>
+          <p><strong>The Challenge</strong> Match the intense, ambitious tone of the speakers and keep the viewer engaged through a complex thought.</p>
+          <p><strong>The Execution</strong> Cut all dead air. Used aggressive punch-ins (zooms), dynamic subtitles, and a driving atmospheric track to build tension.</p>
+          <p><strong>The Result</strong> A high-energy, motivational clip optimized for looping and high shareability.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="glow-line">
+
+<section class="section" id="process">
+  <div class="c">
+    <div class="bg-glow" style="top:20%;left:-250px"></div>
+    <div class="s-label reveal">How it works</div>
+    <h2 class="s-title reveal">Seamless Process.<br>Zero Headache.</h2>
+    
+    <div class="process-grid">
+      <div class="process-step reveal">
+        <div class="step-num">01</div>
+        <h3>Send the Raw Footage</h3>
+        <p>Drop your podcast, talking head, or stream into a folder. No complex briefs required. Just the raw material.</p>
+      </div>
+      <div class="process-step reveal" style="transition-delay: 0.1s;">
+        <div class="step-num">02</div>
+        <h3>The Magic</h3>
+        <p>I handle the structural cuts, pacing, color grading, custom typography, and sound design to craft the story.</p>
+      </div>
+      <div class="process-step reveal" style="transition-delay: 0.2s;">
+        <div class="step-num">03</div>
+        <h3>Ready to Post</h3>
+        <p>You get a polished, high-retention video ready to be published and watched until the very last second.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="glow-line">
+
+<section class="section" id="about">
+  <div class="c">
+    <div class="bg-glow" style="bottom:-100px;right:-150px"></div>
+    <div class="s-label reveal">About the editor</div>
+    
+    <div class="about-header reveal">
+      <h2 class="s-title">Arkhip Manchulyantsev</h2>
+      <div class="about-socials">
+        <a href="https://www.instagram.com/arkhiptheeditor" target="_blank" title="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+        </a>
+        <a href="https://www.tiktok.com/@arkhiptheeditor" target="_blank" title="TikTok">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5v3a3 3 0 0 1-3-3"></path></svg>
+        </a>
+        <a href="https://www.youtube.com/@ArkhipTheEditor" target="_blank" title="YouTube">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="about-grid reveal">
+      <div class="about-photo">
+        <img src="images/hansome-normal.webp" alt="Arkhip" loading="lazy">
+      </div>
+      <div>
+        <div class="about-text">
+          <p>I combine a creative background with a <strong>performance-driven approach</strong> to short-form content.</p>
+          <p>I spent 5 years in a theater studio, which taught me exactly how to hook an audience in the first 3 seconds and maintain dramatic tension so they watch until the end. My background in music production dictates the rhythm of my cuts — making the edit feel natural, dynamic, and algorithm-friendly.</p>
+          <p>I don't just add flashy effects and random B-rolls. I build a visual structure that reflects your expertise, keeps viewers watching, and saves you hours of micromanaging.</p>
+        </div>
+        <div class="s-label" style="margin-top:12px">Skills & Tools</div>
+        <div class="tools">
+          <span>CapCut (Pro)</span><span>FL Studio</span><span>Sound Design</span><span>Color Grading</span><span>Storytelling</span><span>Rhythm & Pacing</span><span>Cinematography</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="contact">
+  <div class="c">
+    <div class="cta-box reveal">
+      <div class="cta-glow"></div>
+      <h2>Let's elevate your <span style="color:var(--accent-l)">content.</span></h2>
+      <p>I know how hard it is to trust an editor with your personal brand. Let’s do a test drive. Send me a raw clip, and I’ll edit a <strong>free 20-second sample</strong> to show you the difference pacing and sound design can make.</p>
+      
+      <div class="cta-primary">
+        <a href="mailto:amanchulyantsev@gmail.com" class="btn btn-p">Send me a raw clip (Email)</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="c"><p>&copy; 2026 Arkhip The Editor. Edited with purpose.</p></div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+  
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  function togglePlay(container) {
+    const video = container.querySelector('video');
+    if (video.paused) {
+      document.querySelectorAll('video').forEach(v => {
+        if (v !== video) {
+          v.pause();
+          v.parentElement.classList.remove('is-playing');
+          v.removeAttribute('controls');
+        }
+      });
+      video.play();
+      video.setAttribute('controls', 'controls');
+      container.classList.add('is-playing');
+    } else {
+      video.pause();
+      container.classList.remove('is-playing');
+      video.removeAttribute('controls');
+    }
+  }
+</script>
+</body>
+</html>
