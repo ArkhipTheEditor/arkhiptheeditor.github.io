@@ -54,6 +54,7 @@
   .hero-desc{font-size:18px;color:var(--dim);max-width:520px;line-height:1.75;margin-bottom:40px;font-weight:300;animation:fu .8s ease .2s both}
   .hero-cta{display:flex;gap:14px;flex-wrap:wrap;animation:fu .8s ease .3s both}
   
+  /* Мотылек: .png, увеличен, 10 секунд цикл */
   .moth-img { 
     width: 100%; 
     max-width: 320px; 
@@ -72,8 +73,6 @@
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 36px;border-radius:100px;font-size:15px;font-weight:400;text-decoration:none;transition:all .35s cubic-bezier(.22,1,.36,1);cursor:pointer;border:none;font-family:'Inter',sans-serif;letter-spacing:.02em}
   .btn-p{background:var(--accent);color:#fff}
   .btn-p:hover{box-shadow:0 0 40px var(--glow-s);transform:translateY(-2px)}
-  .btn-s{background:transparent;color:var(--dim);border:1px solid var(--border)}
-  .btn-s:hover{border-color:var(--ab);color:var(--accent-l)}
 
   .glow-line{height:1px;border:none;margin:0;background:linear-gradient(90deg,transparent,var(--ab),transparent)}
 
@@ -82,9 +81,12 @@
   .s-title{font-family:'Playfair Display',serif;font-size:clamp(36px,4vw,52px);font-weight:700;letter-spacing:-.01em;line-height:1.1;margin-bottom:64px;position:relative;z-index:2;}
   .highlight { color: var(--accent-l); }
 
-  .video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:32px;position:relative;z-index:2;}
-  .vid-card{background:transparent;border-radius:var(--r);overflow:hidden;transition:all .4s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column}
+  /* ЖУРНАЛЬНАЯ ВЕРСТКА: ЗИГЗАГ */
+  .zigzag-wrap { display: flex; flex-direction: column; gap: 120px; position: relative; z-index: 2; }
+  .zigzag-item { display: flex; align-items: center; gap: 72px; }
+  .zigzag-item:nth-child(even) { flex-direction: row-reverse; }
   
+  .zigzag-vid { flex: 0 0 340px; }
   .vid-player{width:100%;aspect-ratio:9/16;background:#000;position:relative;cursor:pointer;overflow:hidden;border-radius:var(--r);border:1px solid var(--border);transition:border-color 0.3s;}
   .vid-player:hover {border-color:var(--ab); box-shadow:0 16px 44px rgba(0,0,0,.4);}
   .vid-player video{width:100%;height:100%;object-fit:cover;display:block;}
@@ -93,19 +95,23 @@
   .vid-player:hover .vid-play-btn{background:rgba(124,58,237,0.75);transform:translate(-50%,-50%) scale(1.05);border-color:transparent;}
   .vid-player.is-playing .vid-play-btn{opacity:0;pointer-events:none;}
   
-  .vid-info{padding:24px 0}
-  .vid-tag{display:inline-block;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent-l);background:var(--abg);border:1px solid var(--ab);padding:4px 10px;border-radius:100px;margin-bottom:16px}
-  .vid-info h3{font-family:'Playfair Display',serif;font-size:26px;font-weight:600;margin-bottom:20px;color:var(--text)}
-  .vid-info p{font-size:15px;color:var(--dim);line-height:1.7;margin-bottom:16px;font-weight:300}
-  .vid-info strong{color:var(--text);font-weight:500;}
+  .zigzag-text { flex: 1; }
+  .vid-tag{display:inline-block;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent-l);background:var(--abg);border:1px solid var(--ab);padding:4px 10px;border-radius:100px;margin-bottom:20px}
+  .zigzag-text h3{font-family:'Playfair Display',serif;font-size:clamp(28px,3vw,36px);font-weight:600;margin-bottom:24px;color:var(--text); line-height: 1.2;}
+  .zigzag-text p{font-size:16px;color:var(--dim);line-height:1.75;margin-bottom:16px;font-weight:300}
+  .zigzag-text strong{color:var(--text);font-weight:500;}
 
-  /* Блок Process */
+  /* Блок с метрикой (Retention) */
+  .vid-metric { display: flex; align-items: center; gap: 16px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .vid-metric .val { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--accent-l); line-height: 1; }
+  .vid-metric .lbl { font-size: 13px; color: var(--dim); line-height: 1.5; font-weight: 300; }
+  .vid-metric .lbl span { color: var(--text); font-weight: 500; display: block; margin-bottom: 2px; }
+
+  /* Блок Process (Анимации работают корректно) */
   .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 48px; margin-bottom: 40px; position:relative; z-index:2;}
   .process-step { position: relative; padding: 20px 0; transition: all 0.4s ease; }
-  
   .process-step .step-num { font-family: 'Playfair Display', serif; font-size: 100px; font-weight: 700; color: rgba(124,58,237, 0.05); position: absolute; top: -30px; left: -10px; line-height: 1; z-index: 0; pointer-events:none; transition: color 0.4s ease; }
   .process-step:hover .step-num, .process-step.auto-highlight .step-num { color: rgba(124,58,237, 0.2); }
-  
   .process-step h3 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; margin-bottom: 12px; color: var(--text); position: relative; z-index: 1; transition: color 0.4s ease; }
   .process-step p { font-size: 15px; color: var(--dim); line-height: 1.7; font-weight: 300; position: relative; z-index: 1; }
 
@@ -137,7 +143,7 @@
   .cta-primary{display:flex;justify-content:center;position:relative;z-index:1;}
   .cta-primary .btn-p{padding:18px 56px;font-size:16px;}
 
-  /* Анимация слова Elevate - плавно и медленно */
+  /* Анимация слова Elevate */
   .elevate-anim { display: inline-block; transform-origin: center bottom; }
   @keyframes elevateBalloon {
     0% { transform: translateY(0); animation-timing-function: ease-out; }
@@ -162,6 +168,10 @@
     .about-grid{grid-template-columns:1fr;gap:40px}
     .about-photo{max-width:260px}
     .nav-links{display:none}
+    
+    /* Адаптив для Зигзага */
+    .zigzag-item, .zigzag-item:nth-child(even) { flex-direction: column; gap: 40px; align-items: flex-start; }
+    .zigzag-vid { flex: auto; width: 100%; max-width: 380px; margin: 0 auto; }
   }
 </style>
 </head>
@@ -202,48 +212,71 @@
     <div class="bg-glow" style="top:0;right:-250px"></div>
     <h2 class="s-title reveal"><span class="highlight">Result</span> &mdash; not just editing</h2>
     
-    <div class="video-grid">
-      <div class="vid-card reveal">
-        <div class="vid-player" onclick="togglePlay(this)">
-          <video src="videos/Huberman.mp4" poster="covers/Huberman.jpg" preload="none" playsinline></video>
-          <div class="vid-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+    <div class="zigzag-wrap">
+      
+      <!-- Video 1: Andrew Huberman -->
+      <div class="zigzag-item reveal">
+        <div class="zigzag-vid">
+          <div class="vid-player" onclick="togglePlay(this)">
+            <video src="videos/Huberman.mp4" poster="covers/Huberman.jpg" preload="none" playsinline></video>
+            <div class="vid-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
         </div>
-        <div class="vid-info">
+        <div class="zigzag-text">
           <span class="vid-tag">Clarity & Focus</span>
           <h3>Huberman Lab</h3>
           <p><strong>The Challenge:</strong> Condense a 4-minute slow monologue into a highly engaging 20-second short without losing the core scientific message.</p>
           <p><strong>The Execution:</strong> Built a new narrative structure (Hook &rarr; Body &rarr; Payoff). Used fast-paced cuts, custom dynamic typography, and SFX for pattern interrupts to maintain high energy.</p>
-          <p><strong>The Result:</strong> A dense, high-retention piece built for algorithms, keeping the viewer hooked until the very last second.</p>
+          
+          <div class="vid-metric">
+            <div class="val">65.9%</div>
+            <div class="lbl"><span>Avg. View Duration</span>(Industry average ~45%)</div>
+          </div>
         </div>
       </div>
 
-      <div class="vid-card reveal">
-        <div class="vid-player" onclick="togglePlay(this)">
-          <video src="videos/Ester.mp4" poster="covers/Ester.jpg" preload="none" playsinline></video>
-          <div class="vid-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      <!-- Video 2: Esther Perel -->
+      <div class="zigzag-item reveal">
+        <div class="zigzag-vid">
+          <div class="vid-player" onclick="togglePlay(this)">
+            <video src="videos/Ester.mp4" poster="covers/Ester.jpg" preload="none" playsinline></video>
+            <div class="vid-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
         </div>
-        <div class="vid-info">
+        <div class="zigzag-text">
           <span class="vid-tag">Depth & Emotion</span>
           <h3>Esther Perel</h3>
           <p><strong>The Challenge:</strong> Preserve the emotional weight and dramatic pauses of the original speech without making it boring for a fast-paced feed.</p>
           <p><strong>The Execution:</strong> Kept the original pacing. Applied warm cinematic color grading, gentle piano, and custom fade-in typography for emphasis. Zero jarring sound effects to maintain the intimate atmosphere.</p>
-          <p><strong>The Result:</strong> A thought-provoking, atmospheric video that stands out and stops the scroll through pure emotion, not cheap dopamine.</p>
+          
+          <div class="vid-metric">
+            <div class="val">81.3%</div>
+            <div class="lbl"><span>Avg. View Duration</span>(Industry average ~45%)</div>
+          </div>
         </div>
       </div>
 
-      <div class="vid-card reveal">
-        <div class="vid-player" onclick="togglePlay(this)">
-          <video src="videos/Hormozi.mp4" poster="covers/Hormozi.jpg" preload="none" playsinline></video>
-          <div class="vid-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      <!-- Video 3: Chris Williamson x Alex Hormozi -->
+      <div class="zigzag-item reveal">
+        <div class="zigzag-vid">
+          <div class="vid-player" onclick="togglePlay(this)">
+            <video src="videos/Hormozi.mp4" poster="covers/Hormozi.jpg" preload="none" playsinline></video>
+            <div class="vid-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
         </div>
-        <div class="vid-info">
+        <div class="zigzag-text">
           <span class="vid-tag">Ambition & Mindset</span>
           <h3>Chris Williamson x Alex Hormozi</h3>
           <p><strong>The Challenge:</strong> Match the intense, ambitious tone of the speakers and keep the viewer engaged through a complex thought.</p>
           <p><strong>The Execution:</strong> Cut all dead air. Used aggressive punch-ins (zooms), dynamic subtitles, and a driving atmospheric track to build tension.</p>
-          <p><strong>The Result:</strong> A high-energy, motivational clip optimized for looping and high shareability.</p>
+          
+          <div class="vid-metric">
+            <div class="val">69.6%</div>
+            <div class="lbl"><span>Avg. View Duration</span>(Industry average ~45%)</div>
+          </div>
         </div>
       </div>
+
     </div>
   </div>
 </section>
@@ -398,8 +431,7 @@
   }, {threshold: 0.5});
   if(processSec) processObs.observe(processSec);
 
-
-  // Зацикленная анимация для слова Elevate (Анимация 2.4с + Пауза 8с = 10.4с)
+  // Зацикленная анимация для слова Elevate
   let elevateInterval;
   const contactSec = document.getElementById('contact');
   const elevateWord = document.querySelector('.elevate-anim');
